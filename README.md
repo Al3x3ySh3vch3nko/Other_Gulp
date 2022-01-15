@@ -5,24 +5,25 @@ Gulp builts
 
 ### Справка
 
-1. Установить Node js [[+]](https://nodejs.org/ru/)
-2. Установить Gulp глобально [[+]](https://gulpjs.com/docs/en/getting-started/quick-start/)
+1. Установить глобально Node js [[+]](https://nodejs.org/ru/)
+2. Установить глобально Gulp [[+]](https://gulpjs.com/docs/en/getting-started/quick-start/)
+3. Установить глобально npm-check-updates [[+]](https://www.npmjs.com/package/npm-check-updates)
 
-3. В папке проекта:
+4. В папке проекта:
 создать package.json
 лучше через npm init
 
-4. В папке проекта инсталляция gulp для конкретного проекта
+5. В папке проекта инсталляция gulp для конкретного проекта
 npm install gulp –save-dev
 
 package.json обновляется
 
-5. Создать файл gulpfile.js для написания сценария сборки
+6. Создать файл gulpfile.js для написания сценария сборки
 
 создать иерархию файлов,
 файл с исходниками src 
 
-6. Протестировать что gulp работает, вставить в gulpfile.js код с их сайта и введя нужную команду в терминал (gulp) и сравниваем
+7. Протестировать что gulp работает, вставить в gulpfile.js код с их сайта и введя нужную команду в терминал (gulp) и сравниваем
 с результатами на сайте
 
 если возникли проблемы, то предлагается очистить кэш 
