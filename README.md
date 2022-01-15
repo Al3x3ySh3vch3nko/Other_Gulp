@@ -1,7 +1,6 @@
 # Other_Gulp
 Gulp builts
 
-`=============================`
 **Справка**
 
 -	требует Node js
@@ -35,7 +34,6 @@ npm install npm -g
 2. gulpfile.js // алгоритм работы сборки
 3. package.json // указаны зависимости
 
-`=============================`
 **Описание элементов сборки:**
 
 ```
@@ -95,3 +93,38 @@ let build = gulp.series(html)
 exports.build = build
 exports.html = html
 ```
+
+**ES6**
+Для активизации синтаксиса ES 6 – 2 варианта:
+1) назвать файл gulpfile.mjs
+2) дописать в packaje.json строку о модулях
+```
+{
+  "name": "v3-ES6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module", // <--------------
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.27.5",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-dart-sass": "^1.0.2",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-jsmin": "^0.1.5",
+    "gulp-newer": "^1.4.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-pug": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-webp": "^4.0.1"
+  }
+}
+```
+
