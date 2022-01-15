@@ -5,8 +5,8 @@ Gulp builts
 
 ### Справка
 
-1. Установить Node js [+](https://nodejs.org/ru/)
-2. Установить gulp глобально [+](https://gulpjs.com/docs/en/getting-started/quick-start/)
+1. Установить Node js [[+]](https://nodejs.org/ru/)
+2. Установить Gulp глобально [[+]](https://gulpjs.com/docs/en/getting-started/quick-start/)
 
 3. В папке проекта:
 создать package.json
