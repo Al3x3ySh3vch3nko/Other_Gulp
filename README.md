@@ -8,8 +8,12 @@ Gulp builts
 1. Установить глобально Node js [[+]](https://nodejs.org/ru/)
 2. Установить глобально Gulp [[+]](https://gulpjs.com/docs/en/getting-started/quick-start/)
 3. Установить глобально npm-check-updates [[+]](https://www.npmjs.com/package/npm-check-updates)
+4. Перенести файлы сборки Gulp в проект
+5. Проверить, что модули сборки актуальной версии (консоль) -> $ ncu. Если нужно обновление -> $ ncu -u
+6. Установить зависимости $ npm install
+7. Запуск Gulp -> $ gulp
 
-4. В папке проекта:
+9. В папке проекта:
 создать package.json
 лучше через npm init
 
