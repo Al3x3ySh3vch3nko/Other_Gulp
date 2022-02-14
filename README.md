@@ -36,6 +36,33 @@ npm install npm -g
 
 ==============
 
+### ES6
+Для активизации синтаксиса ES 6 – 2 варианта:
+1) назвать файл gulpfile.mjs
+2) дописать в packaje.json строку о модулях
+```
+{
+  "name": "v3-ES6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module", // <--------------
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.27.5",
+    "gulp": "^4.0.2",
+  }
+}
+```
+
+
+==============
+
 ### Описание элементов сборки:
 
 ```
@@ -94,31 +121,6 @@ function build() //функция сборки html
 let build = gulp.series(html)
 exports.build = build
 exports.html = html
-```
-==============
-
-### ES6
-Для активизации синтаксиса ES 6 – 2 варианта:
-1) назвать файл gulpfile.mjs
-2) дописать в packaje.json строку о модулях
-```
-{
-  "name": "v3-ES6",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module", // <--------------
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "browser-sync": "^2.27.5",
-    "gulp": "^4.0.2",
-  }
-}
 ```
 
 ==============
@@ -369,3 +371,17 @@ exports.default = watch;
 $ gulp - запуск проекта
 $ gulp build - сборка проекта
 ```
+
+==============
+
+Сборка № 4
+
+
+Для структуры с исползованием ES 6 модулей в структуре файлов также нужно создать отдельные директории
+
++gulp
+ L_+config // файлы с настройками
+     + path.js     // указание путей сборки
+     + plugins.js  // общие плагины
+     + ftp.js      // для работы с ftp сервером
+ L_+tasks
