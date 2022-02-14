@@ -147,7 +147,7 @@ const webpackStream =  require('webpack-stream');
 const browserSync =    require("browser-sync").create();
 
 /* Paths */
-const srcPath = 'src/';                        // директория с ресурсами проекта
+const srcPath = 'src/';                        // директория с исходными ресурсами проекта
 const distPath = 'dist/';                      // директория для сборки проекты
 
 const path = {
@@ -158,7 +158,7 @@ const path = {
         images: distPath + "assets/images/",
         fonts:  distPath + "assets/fonts/"
     },
-    src: {                                     // под-директории с ресурсами проекта
+    src: {                                     // под-директории с исходными ресурсами проекта
         html:   srcPath + "*.html",
         js:     srcPath + "assets/js/*.js",
         css:    srcPath + "assets/scss/*.scss",
