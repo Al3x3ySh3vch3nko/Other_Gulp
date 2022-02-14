@@ -8,7 +8,7 @@ Gulp builts
 1. Установить глобально Node js [[+]](https://nodejs.org/ru/)
 2. Установить глобально Gulp [[+]](https://gulpjs.com/docs/en/getting-started/quick-start/)
 3. Установить глобально npm-check-updates [[+]](https://www.npmjs.com/package/npm-check-updates)
-4. Перенести файлы сборки Gulp в проект
+4. Перенести файлы сборки Gulp в проект (gulpfile.js | src | dist)
 5. Проверить, что модули сборки актуальной версии (консоль) -> $ ncu. Если нужно обновление -> $ ncu -u
 6. Установить зависимости $ npm install
 7. Запуск Gulp -> $ gulp
@@ -127,45 +127,46 @@ exports.html = html
 ```
 "use strict";
 
-const {src, dest} = require("gulp");
-const gulp = require("gulp");
-const autoprefixer = require("gulp-autoprefixer");
-const cssbeautify = require("gulp-cssbeautify");
+/* Modules */
+const {src, dest} =    require("gulp");
+const gulp =           require("gulp");
+const autoprefixer =   require("gulp-autoprefixer");
+const cssbeautify =    require("gulp-cssbeautify");
 const removeComments = require('gulp-strip-css-comments');
-const rename = require("gulp-rename");
-const sass = require("gulp-sass");
-const cssnano = require("gulp-cssnano");
-const uglify = require("gulp-uglify");
-const plumber = require("gulp-plumber");
-const panini = require("panini");
-const imagemin = require("gulp-imagemin");
-const del = require("del");
-const notify = require("gulp-notify");
-const webpack = require('webpack');
-const webpackStream = require('webpack-stream');
-const browserSync = require("browser-sync").create();
+const rename =         require("gulp-rename");
+const sass =           require("gulp-sass");
+const cssnano =        require("gulp-cssnano");
+const uglify =         require("gulp-uglify");
+const plumber =        require("gulp-plumber");
+const panini =         require("panini");
+const imagemin =       require("gulp-imagemin");
+const del =            require("del");
+const notify =         require("gulp-notify");
+const webpack =        require('webpack');
+const webpackStream =  require('webpack-stream');
+const browserSync =    require("browser-sync").create();
 
 /* Paths */
-const srcPath = 'src/';
-const distPath = 'dist/';
+const srcPath = 'src/';                        // директория с ресурсами проекта
+const distPath = 'dist/';                      // директория для сборки проекты
 
 const path = {
-    build: {
+    build: {                                   // под-директории для сборки проекта
         html:   distPath,
         js:     distPath + "assets/js/",
         css:    distPath + "assets/css/",
         images: distPath + "assets/images/",
         fonts:  distPath + "assets/fonts/"
     },
-    src: {
+    src: {                                     // под-директории с ресурсами проекта
         html:   srcPath + "*.html",
         js:     srcPath + "assets/js/*.js",
         css:    srcPath + "assets/scss/*.scss",
         images: srcPath + "assets/images/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
         fonts:  srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}"
     },
-    watch: {
-        html:   srcPath + "**/*.html",
+    watch: {                                  // под-директории, за которыми будет вестись "наблюдение" 
+    html:   srcPath + "**/*.html",
         js:     srcPath + "assets/js/**/*.js",
         css:    srcPath + "assets/scss/**/*.scss",
         images: srcPath + "assets/images/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
@@ -175,15 +176,15 @@ const path = {
 }
 
 /* Tasks */
-function serve() {
+function serve() {                            // задача - отслеживание изменений при сохранении
     browserSync.init({
         server: {
             baseDir: "./" + distPath
         }
     });
 }
-function html(cb) {
-    panini.refresh();
+function html(cb) {                           // задача - сборка html
+    panini.refresh();                         // плагин - разбивка html на части
     return src(path.src.html, {base: srcPath})
         .pipe(plumber())
         .pipe(panini({
@@ -198,7 +199,7 @@ function html(cb) {
 
     cb();
 }
-function css(cb) {
+function css(cb) {                            // задача - сборка css из scss
     return src(path.src.css, {base: srcPath + "assets/scss/"})
         .pipe(plumber({
             errorHandler : function(err) {
@@ -233,7 +234,7 @@ function css(cb) {
 
     cb();
 }
-function cssWatch(cb) {
+function cssWatch(cb) {                          // задача - ускорение сборки css из scss
     return src(path.src.css, {base: srcPath + "assets/scss/"})
         .pipe(plumber({
             errorHandler : function(err) {
@@ -256,7 +257,7 @@ function cssWatch(cb) {
 
     cb();
 }
-function js(cb) {
+function js(cb) {                                 // задача - сборка js
     return src(path.src.js, {base: srcPath + 'assets/js/'})
         .pipe(plumber({
             errorHandler : function(err) {
@@ -290,8 +291,8 @@ function js(cb) {
 
     cb();
 }
-function jsWatch(cb) {
-    return src(path.src.js, {base: srcPath + 'assets/js/'})
+function jsWatch(cb) {                                 // задача - ускорение сборки js
+return src(path.src.js, {base: srcPath + 'assets/js/'})
         .pipe(plumber({
             errorHandler : function(err) {
                 notify.onError({
@@ -312,7 +313,7 @@ function jsWatch(cb) {
 
     cb();
 }
-function images(cb) {
+function images(cb) {                                   // задача - сжатие картинок
     return src(path.src.images)
         .pipe(imagemin([
             imagemin.gifsicle({interlaced: true}),
@@ -330,19 +331,19 @@ function images(cb) {
 
     cb();
 }
-function fonts(cb) {
+function fonts(cb) {                                     // задача - перенос шрифтов из src в dist
     return src(path.src.fonts)
         .pipe(dest(path.build.fonts))
         .pipe(browserSync.reload({stream: true}));
 
     cb();
 }
-function clean(cb) {
-    return del(path.clean);
+function clean(cb) {                                     // задача - очистка директории dist в случае пересборки
+return del(path.clean);
 
     cb();
 }
-function watchFiles() {
+function watchFiles() {                                  // задача - порядок отслеживания изменений
     gulp.watch([path.watch.html], html);
     gulp.watch([path.watch.css], cssWatch);
     gulp.watch([path.watch.js], jsWatch);
@@ -363,4 +364,8 @@ exports.clean = clean;
 exports.build = build;
 exports.watch = watch;
 exports.default = watch;
+
+Команды для консоли 
+$ gulp - запуск проекта
+$ gulp build - сборка проекта
 ```
