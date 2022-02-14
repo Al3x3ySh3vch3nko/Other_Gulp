@@ -36,6 +36,33 @@ npm install npm -g
 
 ==============
 
+### ES6
+Для активизации синтаксиса ES 6 – 2 варианта:
+1) назвать файл gulpfile.mjs
+2) дописать в packaje.json строку о модулях
+```
+{
+  "name": "v3-ES6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module", // <--------------
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.27.5",
+    "gulp": "^4.0.2",
+  }
+}
+```
+
+
+==============
+
 ### Описание элементов сборки:
 
 ```
@@ -95,31 +122,6 @@ let build = gulp.series(html)
 exports.build = build
 exports.html = html
 ```
-==============
-
-### ES6
-Для активизации синтаксиса ES 6 – 2 варианта:
-1) назвать файл gulpfile.mjs
-2) дописать в packaje.json строку о модулях
-```
-{
-  "name": "v3-ES6",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module", // <--------------
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "browser-sync": "^2.27.5",
-    "gulp": "^4.0.2",
-  }
-}
-```
 
 ==============
 
@@ -147,7 +149,7 @@ const webpackStream =  require('webpack-stream');
 const browserSync =    require("browser-sync").create();
 
 /* Paths */
-const srcPath = 'src/';                        // директория с ресурсами проекта
+const srcPath = 'src/';                        // директория с исходными ресурсами проекта
 const distPath = 'dist/';                      // директория для сборки проекты
 
 const path = {
@@ -158,7 +160,7 @@ const path = {
         images: distPath + "assets/images/",
         fonts:  distPath + "assets/fonts/"
     },
-    src: {                                     // под-директории с ресурсами проекта
+    src: {                                     // под-директории с исходными ресурсами проекта
         html:   srcPath + "*.html",
         js:     srcPath + "assets/js/*.js",
         css:    srcPath + "assets/scss/*.scss",
@@ -368,4 +370,22 @@ exports.default = watch;
 Команды для консоли 
 $ gulp - запуск проекта
 $ gulp build - сборка проекта
+```
+
+==============
+
+Сборка № 4
+
+
+Для структуры с исползованием ES 6 модулей в структуре файлов также нужно создать отдельные директории
+
+```
+
++gulp
+ L_+config // файлы с настройками
+     + path.js     // указание путей сборки
+     + plugins.js  // общие плагины
+     + ftp.js      // для работы с ftp сервером
+ L_+tasks
+ 
 ```
