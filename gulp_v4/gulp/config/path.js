@@ -11,15 +11,17 @@ export const path =
         html:   '${srcFolder}/',
         css:    '${srcFolder}/css/',
         js:     '${srcFolder}/js/',
-        images: '${srcFolder}/img/'
+        images: '${srcFolder}/img/',
+        fonts:  '${srcFolder}/fonts/'
     },
     src:
     {
-        html:   '${srcFolder}/*.html',
-        scss:   '${srcFolder}/scss/style.scss',
-        js:     '${srcFolder}/js/app.js',
-        images: '${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp}',
-        svg:    '${srcFolder}/img/**/*.svg'
+        html:     '${srcFolder}/*.html',
+        scss:     '${srcFolder}/scss/style.scss',
+        js:       '${srcFolder}/js/app.js',
+        images:   '${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp}',
+        svg:      '${srcFolder}/img/**/*.svg',
+        svgicons: '${srcFolder}/svgicons/*.svg',
     },
     watch:
     {

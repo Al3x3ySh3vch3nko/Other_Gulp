@@ -1,229 +1,131 @@
-"use strict";
+'use strict'
+const gulp           = require('gulp')
+const sass           = require('gulp-sass')(require('sass'))
+const browserSync    = require('browser-sync').create()
+const uglify         = require('gulp-uglify-es').default
+const concat         = require('gulp-concat')
+const autoprefixer   = require('gulp-autoprefixer')
+const del            = require('del')
 
-const {src, dest} = require("gulp");
-const gulp = require("gulp");
-const autoprefixer = require("gulp-autoprefixer");
-const cssbeautify = require("gulp-cssbeautify");
-const removeComments = require('gulp-strip-css-comments');
-const rename = require("gulp-rename");
-const sass = require("gulp-sass")(require("sass"));
-const cssnano = require("gulp-cssnano");
-const uglify = require("gulp-uglify");
-const plumber = require("gulp-plumber");
-const panini = require("panini");
-const del = require("del");
-const notify = require("gulp-notify");
-const webpack = require('webpack');
-const webpackStream = require('webpack-stream');
-const browserSync = require("browser-sync").create();
+// import imagemin from 'gulp-imagemin';
 
+//-----------------------------------------------------------
+//autoprefixer plugin
+exports.default = () => (
+	gulp.src('app/*.css')
+		.pipe(autoprefixer
+        ({
+            // не подключает опцию для грида ни одним из способов
+            // grid: true,
+            // grid: no-autoplace,
+            // grid: 'no-autoplace'
+		}))
+		.pipe(gulp.dest('dist/styles/css'))
+);
+//-----------------------------------------------------------
+//gulp-sass plugin
+function buildStyles()
+{
+    return gulp.src('app/sass/**/*.scss')
+    .pipe(sass({outputStyle: 'compressed'}))
+    .pipe(autoprefixer())
+    .pipe(gulp.dest('app/sass/'))
+    .pipe(browserSync.stream())
+};
+exports.buildStyles = buildStyles
 
-/* Paths */
-const srcPath = 'src/';
-const distPath = 'dist/';
-
-const path = {
-    build: {
-        html:   distPath,
-        js:     distPath + "assets/js/",
-        css:    distPath + "assets/css/",
-        images: distPath + "assets/images/",
-        fonts:  distPath + "assets/fonts/"
-    },
-    src: {
-        html:   srcPath + "*.html",
-        js:     srcPath + "assets/js/*.js",
-        css:    srcPath + "assets/scss/*.scss",
-        images: srcPath + "assets/images/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
-        fonts:  srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}"
-    },
-    watch: {
-        html:   srcPath + "**/*.html",
-        js:     srcPath + "assets/js/**/*.js",
-        css:    srcPath + "assets/scss/**/*.scss",
-        images: srcPath + "assets/images/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
-        fonts:  srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}"
-    },
-    clean: "./" + distPath
+//-----------------------------------------------------------
+//browser-sync plugin
+function browsersync()
+{
+    browserSync.init
+    ({
+        server:
+        {
+            baseDir: 'app/'
+        },
+        notify: false
+    })
 }
+exports.browsersync = browsersync
 
-
-
-/* Tasks */
-
-function serve() {
-    browserSync.init({
-        server: {
-            baseDir: "./" + distPath
-        }
-    });
+//-----------------------------------------------------------
+//js uglify
+function scripts()
+{
+    return gulp.src
+    ([
+        // '', another file before index js
+        'app/js/index.js'
+    ])
+    .pipe(concat('app/js/compressed_index.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('app/js'))
+    .pipe(browserSync.stream())
 }
+exports.scripts = scripts
+//-----------------------------------------------------------
+// imagemin plugin
+// на гитхабе пока нет решения бага с import 
 
-function html(cb) {
-    panini.refresh();
-    return src(path.src.html, {base: srcPath})
-        .pipe(plumber())
-        .pipe(panini({
-            root:       srcPath,
-            layouts:    srcPath + 'layouts/',
-            partials:   srcPath + 'partials/',
-            helpers:    srcPath + 'helpers/',
-            data:       srcPath + 'data/'
-        }))
-        .pipe(dest(path.build.html))
-        .pipe(browserSync.reload({stream: true}));
+// function images()
+// {
+//     return gulp.src('app/images/**/*')
+//     .pipe(imagemin
+//         ([
+//         imagemin.gifsicle({interlaced: true}),
+//         imagemin.mozjpeg({quality: 75, progressive: true}),
+//         imagemin.optipng({optimizationLevel: 5}),
+//         imagemin.svgo
+//         ({
+//             plugins:
+//             [
+//                 {removeViewBox: true},
+//                 {cleanupIDs: false}
+//             ]
+//         })
+//         ]))
+//     .pipe(gulp.dest('dist/images'))
+// } 
+// exports.images = images
 
-    cb();
+//-----------------------------------------------------------
+//build function
+function build()
+{
+        return gulp.src
+        ([
+            'app/*.html',
+            'app/sass/style.css',
+            'app/fonts/**/*',
+            'app/js/index.js',
+            'app/fonts/**/*'
+        ],
+        {base: 'app'})
+        .pipe(gulp.dest('dist'))
 }
+exports.build = gulp.series(cleanDist, build)
 
-function css(cb) {
-    return src(path.src.css, {base: srcPath + "assets/scss/"})
-        .pipe(plumber({
-            errorHandler : function(err) {
-                notify.onError({
-                    title:    "SCSS Error",
-                    message:  "Error: <%= error.message %>"
-                })(err);
-                this.emit('end');
-            }
-        }))
-        .pipe(sass({
-            includePaths: './node_modules/'
-        }))
-        .pipe(autoprefixer({
-            cascade: true
-        }))
-        .pipe(cssbeautify())
-        .pipe(dest(path.build.css))
-        .pipe(cssnano({
-            zindex: false,
-            discardComments: {
-                removeAll: true
-            }
-        }))
-        .pipe(removeComments())
-        .pipe(rename({
-            suffix: ".min",
-            extname: ".css"
-        }))
-        .pipe(dest(path.build.css))
-        .pipe(browserSync.reload({stream: true}));
+//-----------------------------------------------------------
+//del plugin
 
-    cb();
+function cleanDist()
+{
+    return del('dist')
 }
+exports.cleanDist = cleanDist
 
-function cssWatch(cb) {
-    return src(path.src.css, {base: srcPath + "assets/scss/"})
-        .pipe(plumber({
-            errorHandler : function(err) {
-                notify.onError({
-                    title:    "SCSS Error",
-                    message:  "Error: <%= error.message %>"
-                })(err);
-                this.emit('end');
-            }
-        }))
-        .pipe(sass({
-            includePaths: './node_modules/'
-        }))
-        .pipe(rename({
-            suffix: ".min",
-            extname: ".css"
-        }))
-        .pipe(dest(path.build.css))
-        .pipe(browserSync.reload({stream: true}));
-
-    cb();
+//-----------------------------------------------------------
+//watching function
+function watching()
+{
+    gulp.watch('app/sass/**/*.scss', buildStyles)
+    gulp.watch(['app/**/*.js', '!app/**/compressed_index.js'], scripts)
+    gulp.watch('app/*.html').on('change', browserSync.reload)
 }
+exports.watching = watching
 
-function js(cb) {
-    return src(path.src.js, {base: srcPath + 'assets/js/'})
-        .pipe(plumber({
-            errorHandler : function(err) {
-                notify.onError({
-                    title:    "JS Error",
-                    message:  "Error: <%= error.message %>"
-                })(err);
-                this.emit('end');
-            }
-        }))
-        .pipe(webpackStream({
-          mode: "production",
-          output: {
-            filename: 'app.js',
-          }
-        }))
-        .pipe(dest(path.build.js))
-        .pipe(browserSync.reload({stream: true}));
+//-----------------------------------------------------------
+//default starting
 
-    cb();
-}
-
-function jsWatch(cb) {
-    return src(path.src.js, {base: srcPath + 'assets/js/'})
-        .pipe(plumber({
-            errorHandler : function(err) {
-                notify.onError({
-                    title:    "JS Error",
-                    message:  "Error: <%= error.message %>"
-                })(err);
-                this.emit('end');
-            }
-        }))
-        .pipe(webpackStream({
-          mode: "development",
-          output: {
-            filename: 'app.js',
-          }
-        }))
-        .pipe(dest(path.build.js))
-        .pipe(browserSync.reload({stream: true}));
-
-    cb();
-}
-
-function images(cb) {
-    return src(path.src.images)
-        .pipe(dest(path.build.images))
-        .pipe(browserSync.reload({stream: true}));
-
-    cb();
-}
-
-function fonts(cb) {
-    return src(path.src.fonts)
-        .pipe(dest(path.build.fonts))
-        .pipe(browserSync.reload({stream: true}));
-
-    cb();
-}
-
-function clean(cb) {
-    return del(path.clean);
-
-    cb();
-}
-
-function watchFiles() {
-    gulp.watch([path.watch.html], html);
-    gulp.watch([path.watch.css], cssWatch);
-    gulp.watch([path.watch.js], jsWatch);
-    gulp.watch([path.watch.images], images);
-    gulp.watch([path.watch.fonts], fonts);
-}
-
-const build = gulp.series(clean, gulp.parallel(html, css, js, images, fonts));
-const watch = gulp.parallel(build, watchFiles, serve);
-
-
-
-/* Exports Tasks */
-exports.html = html;
-exports.css = css;
-exports.js = js;
-exports.images = images;
-exports.fonts = fonts;
-exports.clean = clean;
-exports.build = build;
-exports.watch = watch;
-exports.default = watch;
+exports.default = gulp.parallel(buildStyles, scripts, browsersync, watching)
